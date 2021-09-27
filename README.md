@@ -1,4 +1,7 @@
-# CS2031 Telecommunication II - Docker Walkthrough
+<h1 align="center">Docker Walkthrough</h1>
+<h2 align="center">CS2031 Telecommunication II - Professor Stefan Weber</h2>
+
+
 **Disclaimer**: The use of Docker for the assignments is optional – All assignments can be implemented and
 run on personal laptops or computers in the labs as well. No one will be penalised for not using Docker for
 the assignments.
@@ -42,19 +45,19 @@ client and server based on the ”java” image, mount a directory from your hos
 under ”/cs2031” and start ”/bin/bash” when the container is run. The 4th and 5th line will connect the
 two containers to the network cs2031.
 
-1. ```zsh
+```zsh
 docker network create −d bridge −−subnet 172.20.0.0/16 cs2031
 ```
-3. ```zsh
+```zsh
 docker create −−name client −ti −v /dev/cs2031:/cs2031 java /bin/bash
 ```
-4. ```zsh
+```zsh
 docker create −−name server −ti −v /dev/cs2031:/cs2031 java /bin/bash
 ```
-6. ```zsh
+```zsh
 docker network connect cs2031 client
 ```
-7. ```zsh
+```zsh
 docker network connect cs2031 server
 ```
 
@@ -120,12 +123,13 @@ figure 3.
 </ul>
 
 **Terminals**
-1. ```zsh
+```zsh
 docker start −i server
 $ cd cs2031
 $ java Server
 ```
-2. ```zsh
+
+```zsh
 docker start −i client
 $ cd cs2031
 $ java Client
@@ -164,17 +168,16 @@ an acknowledgement.
 <span style="color:cyan">In order to get X11 prompt working you need to install <a href="https://www.xquartz.org/"><b>X-Quartz</b></a> and must restart your pc after installation to get it working.</span>
 
 **Terminals**
-1. ```zsh
+```zsh
 xhost + 127.0.0.1
 ```
-2. ```zsh
+```zsh
 docker start −i server
 $ cd cs2031/X11
 $ export DISPLAY=docker.for.mac.localhost:0
 $ java −cp .:./tcdlib.jar Server
 ```
-
-3. ```zsh
+```zsh
 docker start −i client
 $ cd cs2031/X11
 $ export DISPLAY=docker.for.mac.localhost:0
@@ -190,22 +193,22 @@ In order to keep the initial configuration simple, I left out a parameter, ”�
 containers to use capabilities in Linux. The capabilities though are necessary to run wireshark in containers.
 The commands in listing 4 show how to remove the existing containers and to create 2 containers with the correct parameters to run wireshark.
 
-1. ```zsh
+```zsh
 docker container stop client server
 ```
-2. ```zsh
+```zsh
 docker container rm client server
 ```
-3. ```zsh
+```zsh
 docker create −−name client −−cap−add=ALL −ti −v dev/cs2031:/cs2031 java /bin/bash
 ```
-4. ```zsh
+```zsh
 docker create −−name server −−cap−add=ALL −ti −v dev/cs2031:/cs2031 java /bin/bash
 ```
-5. ```zsh
+```zsh
 docker network connect cs2031 client
 ```
-6. ```zsh
+```zsh
 docker network connect cs2031 server
 ```
 
@@ -224,10 +227,10 @@ these examples.
 <br>
 
 **Terminals**
-1. ```zsh
+```zsh
 xhost + 127.0.0.1
 ```
-2. ```zsh
+```zsh
 docker start −i server
 $ apt−get update
 $ apt−get install wireshark
@@ -236,7 +239,7 @@ $ export DISPLAY=docker.for.mac.localhost:0
 $ wireshark 2>/dev/null &
 $ java −cp .:./tcdlib.jar Server
 ```
-3. ```zsh
+```zsh
 docker start −i client
 $ cd cs2031/X11
 $ export DISPLAY=docker.for.mac.localhost:0
