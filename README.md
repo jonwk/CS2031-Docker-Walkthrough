@@ -286,6 +286,40 @@ within the IP Packet and the content of the datagram
   </i>
 </p>
 
+### Trouble with X-Term
+If you're facing any trouble with xterm, this should help [link](https://gist.github.com/cschiewek/246a244ba23da8b9f0e7b11a68bf3285)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/59068112/135322911-f9a6bd6e-9ce9-47c8-9513-7361fe5d7ed2.png"/>
+</p>
+
+> > Thanks for this, it really helped me out!
+> > It seems things have moved a bit underneath all this since 2017, so I created an [updated version](https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949).
+> 
+> For anyone arriving... this link contains the only correctly current version. Steps to follow...
+> 
+> It also helped me understand why the volume mount doesn't do anything and what's really going on.
+> 
+> **In short: (with optional explanation)**
+> 
+> 1. From the XQuartz preferences, in the `security` tab, make sure `Allow connections from network clients` is enabled. _Restart XQuartz._
+> 
+> > NB: After restarting XQuartz, you can run `netstat -an | grep -F 6000` to find that XQuartz has opened port 6000. This is actually how your docker container will be communicating with XQuartz on the host. The volume mount is not (and cannot due to an ongoing issue -- more details in the original link) be used.
+> 
+> 1. In a terminal on the host, run `xhost +localhost`.
+> 
+> > NB: This will allow network X11 connections from `localhost` only, which is fine. Also if XQuartz is not running, xhost will start it.
+> 
+> 1. Pass `-e DISPLAY=host.docker.internal:0` to any docker image you want to forward X to the host.
+> 
+> > NB: `host.docker.internal` is the DNS name which resolves to your host machine from within your docker container. This will get X within the container to connect to port 6000 on your host and communicate with XQuartz -- the volume mount is entirely unused. You can also set the env var directly in the container with bash/Dockerfile/etc.
+> 
+> 1. Run your application.
+> 
+> > NB: If all of the above steps were completed successfully, an X window should open on your host which is forwarding from the container. Debugging steps can be checked from the link above.
+> 
+> Much thanks to @paul-krohn for putting together his README which clarified a lot.
+
 
 ## 2 Summary
 This short walkthrough should give you the tools to setup small topologies for your assignments, to execute
